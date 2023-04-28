@@ -1,21 +1,22 @@
 if not game:IsLoaded() then
-	game.Loaded:Wait()
+    game.Loaded:Wait()
 end
 
 local Services = {}
 Services = setmetatable({}, {
-	__index = function(self, index)
-		return game:GetService(index) -- Easily get services without having to list all of them manually
-	end
+    __index = function(self, index)
+        return game:GetService(index) -- Easily get services without having to list all of them manually
+    end
 })
 
 -- Ensuring the game load's entirely before doing anything (prevents bugs)
 
 repeat
-	task.wait(0.5)
+    task.wait(0.5)
 until Services.Players and Services.Workspace and Services.ReplicatedStorage and Services.TweenService
 
-local Players, Workspace, ReplicatedStorage, TweenService, RunService = Services.Players, Services.Workspace, Services.ReplicatedStorage, Services.TweenService, Services.RunService -- Shortens common services even more
+local Players, Workspace, ReplicatedStorage, TweenService, RunService = Services.Players, Services.Workspace,
+    Services.ReplicatedStorage, Services.TweenService, Services.RunService -- Shortens common services even more
 local LocalPlayer = Players.LocalPlayer
 local Character = LocalPlayer.Character or LocalPlayer.CharacterAdded:Wait()
 local Humanoid = Character:WaitForChild('Humanoid')
@@ -32,8 +33,6 @@ local Mouse = LocalPlayer:GetMouse()
 
 wait = task.wait -- Automatically optimize scripts by replacing slow / deprecated functions with their faster / working alternatives
 spawn = task.spawn
-pcall = xpcall
-
 -- Commonly used functions
 
 local function Raycast(point1, point2)
@@ -55,14 +54,13 @@ local function GetClosestPlayer(health, forcefield, team)
     local Closest = nil
     local Lowest = math.huge
 
-    for i,v in next, Players:GetPlayers() do
+    for i, v in next, Players:GetPlayers() do
         if v ~= LocalPlayer then
             pcall(function()
                 local PlrCharacter = v.Character
                 local PlrRoot = PlrCharacter:FindFirstChild('HumanoidRootPart')
                 local PlrHum = PlrCharacter:FindFirstChild('Humanoid')
-                local Mag = (RootPart - PlrRoot).Magnitude
-
+                local Mag = (RootPart.Position - PlrRoot.Position).Magnitude
                 local CanContinue = true
 
                 if health and PlrHum.Health == 0 then
@@ -77,6 +75,8 @@ local function GetClosestPlayer(health, forcefield, team)
                     CanContinue = false
                 end
 
+                print(CanContinue, (Mag < Lowest))
+
                 if CanContinue and Mag < Lowest then
                     Lowest = Mag
                     Closest = v
@@ -89,12 +89,12 @@ local function GetClosestPlayer(health, forcefield, team)
 end
 
 local function GetRandomPlayer()
-    local Players = {}
+    local players = {}
     table.foreach(Players:GetPlayers(), function(i, v)
         if v ~= LocalPlayer then
-            table.insert(Players, v)
+            table.insert(players, v)
         end
     end)
 
-    return Players[math.random(1, #Players)]
+    return players[math.random(1, #players)]
 end
