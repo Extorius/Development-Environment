@@ -87,3 +87,14 @@ local function GetClosestPlayer(health, forcefield, team)
 
     return Closest, Lowest
 end
+
+local function GetRandomPlayer()
+    local Players = {}
+    table.foreach(Players:GetPlayers(), function(i, v)
+        if v ~= LocalPlayer then
+            table.insert(Players, v)
+        end
+    end)
+
+    return Players[math.random(1, #Players)]
+end
