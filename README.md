@@ -34,7 +34,6 @@ print(Mouse) -- LocalPlayer:GetMouse() shortcut
 ```lua
 wait == task.wait
 spawn == task.spawn
-pcall == xpcall
 ```
 ## Premade Functions
 ### GetClosestPlayer
